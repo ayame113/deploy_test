@@ -1186,6 +1186,7 @@ function buildOrContextImpl(
   defaultWD,
   callback,
 ) {
+  console.log("buildOrContextImpl")
   const details = createObjectStash();
   const isContext = callName === "context";
   const handleError = (e, pluginName) => {

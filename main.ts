@@ -110,8 +110,9 @@ await new Promise((ok) => setTimeout(ok, 5000));
 
 {
   const start = performance.now();
-  await Deno.readFile(new URL(import.meta.resolve("./README.md")));
-  console.log("Deno.readFile:", performance.now() - start);
+  const res = await fetch("https://deno.land/std@0.186.0/http/server.ts");
+  await res.arrayBuffer()
+  console.log("fetch:", performance.now() - start);
 }
 
 const url = new URL(import.meta.resolve("./files"));
