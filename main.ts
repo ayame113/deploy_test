@@ -45,8 +45,8 @@ async function ensureEsbuildInitialized() {
   await ensureEsbuildInitialized();
   console.log("ensureEsbuildInitialized:", performance.now() - start);
 }
-// console.log("> await delay(5000)");
-// await new Promise((ok) => setTimeout(ok, 5000));
+console.log("> await delay(5000)");
+await new Promise((ok) => setTimeout(ok, 5000));
 {
   const start = performance.now();
   // In dev-mode we skip identifier minification to be able to show proper
