@@ -1,3 +1,5 @@
+import { serve } from "https://deno.land/std@0.186.0/http/server.ts";
+
 {
   const start = performance.now();
   await Deno.readFile(new URL(import.meta.resolve("./README.md")));
@@ -22,4 +24,4 @@
   console.log("serial Deno.readDir", performance.now() - start);
 }
 
-Deno.serve((_req) => Response.json("hello"));
+serve((_req) => Response.json("hello"));
