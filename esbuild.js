@@ -948,6 +948,7 @@ function createChannel(streamIn) {
   let buildOrContext = (
     { callName, refs, options, isTTY, defaultWD, callback },
   ) => {
+    console.log("buildOrContext")
     let refCount = 0;
     const buildKey = nextBuildKey++;
     const requestCallbacks = {};
