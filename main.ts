@@ -9,14 +9,14 @@ import { denoPlugin } from "https://raw.githubusercontent.com/lucacasonato/esbui
 import * as esbuild from "./esbuild.js";
 // import * as esbuild from "https://deno.land/x/esbuild@v0.17.11/wasm.js";
 
-const fetchStub = stub(
-  globalThis,
-  "fetch",
-  (...req): Promise<Response> => {
-    console.log(req);
-    return fetchStub.original.call(globalThis, ...req);
-  },
-);
+// const fetchStub = stub(
+//   globalThis,
+//   "fetch",
+//   (...req): Promise<Response> => {
+//     console.log(req);
+//     return fetchStub.original.call(globalThis, ...req);
+//   },
+// );
 
 export interface JSXConfig {
   jsx: "react" | "react-jsx";
