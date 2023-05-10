@@ -8,9 +8,7 @@ import * as esbuildWasm from "https://deno.land/x/esbuild@v0.17.11/wasm.js";
 import * as esbuildNative from "https://deno.land/x/esbuild@v0.17.11/mod.js";
 // @ts-ignore trust me
 // deno-lint-ignore no-deprecated-deno-api
-const esbuild: typeof esbuildWasm = Deno.run === undefined
-  ? esbuildWasm
-  : esbuildNative;
+const esbuild: typeof esbuildWasm = esbuildWasm;
 
 export interface JSXConfig {
   jsx: "react" | "react-jsx";
@@ -56,6 +54,36 @@ async function ensureEsbuildInitialized() {
   const bundle = await esbuild.build({
     bundle: true,
     define: { __FRSH_BUILD_ID: `"BUILD_ID"` },
+    entryPoints: { main: "./test.ts" },
+    format: "esm",
+    metafile: true,
+    ...minifyOptions,
+    outdir: ".",
+    // This is requried to ensure the format of the outputFiles path is the same
+    // between windows and linux
+    absWorkingDir: Deno.cwd(),
+    outfile: "",
+    platform: "neutral",
+    plugins: [denoPlugin()],
+    sourcemap: false,
+    splitting: true,
+    target: ["chrome99", "firefox99", "safari15"],
+    treeShaking: true,
+    write: false,
+    jsx: "automatic",
+    jsxImportSource: "react",
+  });
+  console.log("esbuild.build - (1)", performance.now() - start);
+}
+await new Promise((ok) => setTimeout(ok, 5000));
+{
+  const start = performance.now();
+  // In dev-mode we skip identifier minification to be able to show proper
+  // component names in Preact DevTools instead of single characters.
+  const minifyOptions: Partial<BuildOptions> = { minify: true };
+  const bundle = await esbuild.build({
+    bundle: true,
+    define: { __FRSH_BUILD_ID: `"BUILD_ID"` },
     entryPoints: { main: "./main.ts" },
     format: "esm",
     metafile: true,
@@ -75,7 +103,7 @@ async function ensureEsbuildInitialized() {
     jsx: "automatic",
     jsxImportSource: "react",
   });
-  console.log("esbuild.build", performance.now() - start);
+  console.log("esbuild.build - (2)", performance.now() - start);
 }
 
 {
