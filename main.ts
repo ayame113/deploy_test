@@ -1,4 +1,6 @@
 import { serve } from "https://deno.land/std@0.186.0/http/server.ts";
+import { BuildOptions } from "https://deno.land/x/esbuild@v0.17.11/mod.js";
+import { denoPlugin } from "https://raw.githubusercontent.com/lucacasonato/esbuild_deno_loader/8031f71afa1bbcd3237a94b11f53a2e5c5c0e7bf/mod.ts";
 
 // -- esbuild --
 // @deno-types="https://deno.land/x/esbuild@v0.17.11/mod.d.ts"
@@ -45,6 +47,35 @@ async function ensureEsbuildInitialized() {
   const start = performance.now();
   await ensureEsbuildInitialized();
   console.log("ensureEsbuildInitialized", performance.now() - start);
+}
+{
+  const start = performance.now();
+  // In dev-mode we skip identifier minification to be able to show proper
+  // component names in Preact DevTools instead of single characters.
+  const minifyOptions: Partial<BuildOptions> = { minify: true };
+  const bundle = await esbuild.build({
+    bundle: true,
+    define: { __FRSH_BUILD_ID: `"BUILD_ID"` },
+    entryPoints: { main: "./main.ts" },
+    format: "esm",
+    metafile: true,
+    ...minifyOptions,
+    outdir: ".",
+    // This is requried to ensure the format of the outputFiles path is the same
+    // between windows and linux
+    absWorkingDir: Deno.cwd(),
+    outfile: "",
+    platform: "neutral",
+    plugins: [denoPlugin()],
+    sourcemap: false,
+    splitting: true,
+    target: ["chrome99", "firefox99", "safari15"],
+    treeShaking: true,
+    write: false,
+    jsx: "automatic",
+    jsxImportSource: "react",
+  });
+  console.log("esbuild.build", performance.now() - start);
 }
 
 {
