@@ -4,11 +4,7 @@ import { denoPlugin } from "https://raw.githubusercontent.com/lucacasonato/esbui
 
 // -- esbuild --
 // @deno-types="https://deno.land/x/esbuild@v0.17.11/mod.d.ts"
-import * as esbuildWasm from "https://deno.land/x/esbuild@v0.17.11/wasm.js";
-import * as esbuildNative from "https://deno.land/x/esbuild@v0.17.11/mod.js";
-// @ts-ignore trust me
-// deno-lint-ignore no-deprecated-deno-api
-const esbuild: typeof esbuildWasm = esbuildWasm;
+import * as esbuild from "https://deno.land/x/esbuild@v0.17.11/wasm.js";
 
 export interface JSXConfig {
   jsx: "react" | "react-jsx";
@@ -19,8 +15,8 @@ let esbuildInitialized: boolean | Promise<void> = false;
 async function ensureEsbuildInitialized() {
   if (esbuildInitialized === false) {
     // deno-lint-ignore no-deprecated-deno-api
-    if (Deno.run === undefined) {
-      const wasmURL = new URL("./esbuild_v0.17.11.wasm", import.meta.url).href;
+    if (true) {
+      const wasmURL = new URL("https://deno.land/x/fresh@1.1.5/src/server/esbuild_v0.17.11.wasm?source")
       esbuildInitialized = fetch(wasmURL).then(async (r) => {
         const resp = new Response(r.body, {
           headers: { "Content-Type": "application/wasm" },
@@ -44,8 +40,10 @@ async function ensureEsbuildInitialized() {
 {
   const start = performance.now();
   await ensureEsbuildInitialized();
-  console.log("ensureEsbuildInitialized", performance.now() - start);
+  console.log("ensureEsbuildInitialized:", performance.now() - start);
 }
+// console.log("> await delay(5000)");
+// await new Promise((ok) => setTimeout(ok, 5000));
 {
   const start = performance.now();
   // In dev-mode we skip identifier minification to be able to show proper
@@ -73,8 +71,9 @@ async function ensureEsbuildInitialized() {
     jsx: "automatic",
     jsxImportSource: "react",
   });
-  console.log("esbuild.build - (1)", performance.now() - start);
+  console.log("esbuild.build　(1):", performance.now() - start);
 }
+console.log("> await delay(5000)");
 await new Promise((ok) => setTimeout(ok, 5000));
 {
   const start = performance.now();
@@ -103,13 +102,13 @@ await new Promise((ok) => setTimeout(ok, 5000));
     jsx: "automatic",
     jsxImportSource: "react",
   });
-  console.log("esbuild.build - (2)", performance.now() - start);
+  console.log("esbuild.build (2):", performance.now() - start);
 }
 
 {
   const start = performance.now();
   await Deno.readFile(new URL(import.meta.resolve("./README.md")));
-  console.log("Deno.readFile", performance.now() - start);
+  console.log("Deno.readFile:", performance.now() - start);
 }
 
 const url = new URL(import.meta.resolve("./files"));
@@ -118,7 +117,7 @@ const url = new URL(import.meta.resolve("./files"));
   for await (const entry of Deno.readDir(url)) {
     await Deno.stat("./files/" + entry.name);
   }
-  console.log("serial Deno.readDir", performance.now() - start);
+  console.log("serial Deno.readDir:", performance.now() - start);
 }
 
 {
@@ -128,7 +127,7 @@ const url = new URL(import.meta.resolve("./files"));
     statPromise.push(Deno.stat("./files/" + entry.name));
   }
   await Promise.all(statPromise);
-  console.log("paralell Deno.readDir", performance.now() - start);
+  console.log("paralell Deno.readDir:", performance.now() - start);
 }
 
 serve((_req) => Response.json("hello"));
