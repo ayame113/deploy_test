@@ -4,7 +4,8 @@ import { denoPlugin } from "https://raw.githubusercontent.com/lucacasonato/esbui
 
 // -- esbuild --
 // @deno-types="https://deno.land/x/esbuild@v0.17.11/mod.d.ts"
-import * as esbuild from "https://deno.land/x/esbuild@v0.17.11/wasm.js";
+import * as esbuild from "./esbuild.js";
+// import * as esbuild from "https://deno.land/x/esbuild@v0.17.11/wasm.js";
 
 export interface JSXConfig {
   jsx: "react" | "react-jsx";
@@ -71,7 +72,7 @@ async function ensureEsbuildInitialized() {
     jsx: "automatic",
     jsxImportSource: "react",
   });
-  console.log("esbuild.build　(1):", performance.now() - start);
+  console.log("esbuild.build (1):", performance.now() - start);
 }
 console.log("> await delay(5000)");
 await new Promise((ok) => setTimeout(ok, 5000));

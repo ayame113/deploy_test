@@ -2244,7 +2244,11 @@ function convertOutputFiles({ path, contents }) {
 // lib/deno/wasm.ts
 var version = "0.17.18";
 var build = (options) =>
-  ensureServiceIsRunning().then((service) => service.build(options));
+  ensureServiceIsRunning().then((service) => {
+    const start = performance.now();
+    service.build(options);
+    console.log("service.build:", performance.now() - start);
+  });
 var context = (options) =>
   ensureServiceIsRunning().then((service) => service.context(options));
 var transform = (input, options) =>
