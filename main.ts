@@ -17,6 +17,7 @@ async function ensureEsbuildInitialized() {
   if (esbuildInitialized === false) {
     // deno-lint-ignore no-deprecated-deno-api
     if (true) {
+      console.log("aaaaaa")
       const wasmURL = new URL("https://deno.land/x/fresh@1.1.5/src/server/esbuild_v0.17.11.wasm?source")
       esbuildInitialized = fetch(wasmURL).then(async (r) => {
         const resp = new Response(r.body, {
