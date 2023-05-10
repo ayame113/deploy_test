@@ -1,3 +1,4 @@
+import "data:text/typescript,Deno.run = undefined"
 import { serve } from "https://deno.land/std@0.186.0/http/server.ts";
 import { BuildOptions } from "https://deno.land/x/esbuild@v0.17.11/mod.js";
 import { denoPlugin } from "https://raw.githubusercontent.com/lucacasonato/esbuild_deno_loader/8031f71afa1bbcd3237a94b11f53a2e5c5c0e7bf/mod.ts";
