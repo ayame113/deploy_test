@@ -1,5 +1,6 @@
-import "data:text/typescript,Deno.run = undefined"
+import "data:text/typescript,Deno.run = undefined";
 import { serve } from "https://deno.land/std@0.186.0/http/server.ts";
+import { stub } from "https://deno.land/std@0.186.0/testing/mock.ts";
 import { BuildOptions } from "https://deno.land/x/esbuild@v0.17.11/mod.js";
 import { denoPlugin } from "https://raw.githubusercontent.com/lucacasonato/esbuild_deno_loader/8031f71afa1bbcd3237a94b11f53a2e5c5c0e7bf/mod.ts";
 
@@ -7,6 +8,15 @@ import { denoPlugin } from "https://raw.githubusercontent.com/lucacasonato/esbui
 // @deno-types="https://deno.land/x/esbuild@v0.17.11/mod.d.ts"
 import * as esbuild from "./esbuild.js";
 // import * as esbuild from "https://deno.land/x/esbuild@v0.17.11/wasm.js";
+
+const fetchStub = stub(
+  globalThis,
+  "fetch",
+  (...req): Promise<Response> => {
+    console.log(req);
+    return fetchStub.original.call(globalThis, ...req);
+  },
+);
 
 export interface JSXConfig {
   jsx: "react" | "react-jsx";
@@ -18,8 +28,10 @@ async function ensureEsbuildInitialized() {
   if (esbuildInitialized === false) {
     // deno-lint-ignore no-deprecated-deno-api
     if (true) {
-      console.log("aaaaaa")
-      const wasmURL = new URL("https://deno.land/x/fresh@1.1.5/src/server/esbuild_v0.17.11.wasm?source")
+      console.log("aaaaaa");
+      const wasmURL = new URL(
+        "https://deno.land/x/fresh@1.1.5/src/server/esbuild_v0.17.11.wasm?source",
+      );
       esbuildInitialized = fetch(wasmURL).then(async (r) => {
         const resp = new Response(r.body, {
           headers: { "Content-Type": "application/wasm" },
@@ -65,7 +77,7 @@ await new Promise((ok) => setTimeout(ok, 5000));
     absWorkingDir: Deno.cwd(),
     outfile: "",
     platform: "neutral",
-    plugins: [denoPlugin({loader:"portable"})],
+    plugins: [denoPlugin({ loader: "portable" })],
     sourcemap: false,
     splitting: true,
     target: ["chrome99", "firefox99", "safari15"],
@@ -96,7 +108,7 @@ await new Promise((ok) => setTimeout(ok, 5000));
     absWorkingDir: Deno.cwd(),
     outfile: "",
     platform: "neutral",
-    plugins: [denoPlugin({loader:"portable"})],
+    plugins: [denoPlugin({ loader: "portable" })],
     sourcemap: false,
     splitting: true,
     target: ["chrome99", "firefox99", "safari15"],
@@ -111,7 +123,7 @@ await new Promise((ok) => setTimeout(ok, 5000));
 {
   const start = performance.now();
   const res = await fetch("https://deno.land/std@0.186.0/http/server.ts");
-  await res.arrayBuffer()
+  await res.arrayBuffer();
   console.log("fetch:", performance.now() - start);
 }
 
