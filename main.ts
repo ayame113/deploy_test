@@ -148,4 +148,5 @@ const url = new URL(import.meta.resolve("./files"));
   console.log("paralell Deno.readDir:", performance.now() - start);
 }
 
+console.log(Deno.memoryUsage())
 serve((_req) => Response.json("hello"));
