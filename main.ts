@@ -9,6 +9,8 @@ import { denoPlugin } from "https://raw.githubusercontent.com/lucacasonato/esbui
 import * as esbuild from "./esbuild.js";
 // import * as esbuild from "https://deno.land/x/esbuild@v0.17.11/wasm.js";
 
+console.log(Deno.memoryUsage())
+
 const fetchStub = stub(
   globalThis,
   "fetch",
